@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>Dependency Injection</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/black.css">
@@ -24,8 +24,124 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+					<h1>Dependency Injection in Scala</h1>
+					Slides available here: <a href="https://github.com/alexduf/DI-Talk">https://github.com/alexduf/DI-Talk</a>
+					<aside class="notes">
+						<ul>
+							<li>Welcome</li>
+							<li>Thanks!</li>
+						</ul>
+						<ul>
+							<li>Alex</li>
+							<li>7 years of Java</li>
+							<li>Spring! => Stockholm Syndrome</li>
+							<li>3 years ago => Scala</li>
+							<li>The Guardian in London</li>
+							<li>Server stuff with Play framework</li>
+						</ul>
+					</aside>
+				</section>
+				<section>
+					<h2>What are we going to talk about?</h2>
+					<ul>
+						<li>Definition</li>
+						<li>The different types of DI</li>
+						<li>Explanation via an example</li>
+						<li>It's all about wiring now</li>
+						<li>How does Play! deal with it?</li>
+					</ul>
+				</section>
+				<section>
+					<h2>What are we NOT going to talk about?</h2>
+					<ul>
+						<li>Inversion of Control</li>
+						<li>Interceptors</li>
+						<li>Dependency modules</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Dependency Injection?</h2>
+					<ul>
+						<li class="fragment">Injection</li>
+						<li class="fragment">Dependency</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Dependency?</h2>
+					<pre><code data-trim data-noescape>
+class SaladService {
+ val lettuceDao = new LettuceDao()
+ val tomatoDao = new TomatoDao()
+ def prepareSalad(nbPeople: Int): Salad = {
+   // do something here with lettuceDao and tomatoDao
+ }
+}
+					</code></pre>
+					<aside class="notes">
+						<ul>
+							<li>dependencies: lettuceDao and tomatoDao</li>
+							<li>Is it bad? No! => Unit test</li>
+						</ul>
+					</aside>
+				</section>
+				<section>
+					<h2>Injection?</h2>
+					<pre><code data-trim data-noescape>
+class SaladService {
+ val lettuceDao = ???
+ val tomatoDao = ???
+ def prepareSalad(nbPeople: Int): Salad = {
+   // do something here with lettuceDao and tomatoDao
+ }
+}
+					</code></pre>
+					<aside class="notes">
+						<ul>
+							<li>Separation of responsibility</li>
+							<li>Creation may be complex or require more dependency: conf, DB, transaction</li>
+							<li>How?</li>
+						</ul>
+					</aside>
+				</section>
+				<section>
+					<h2>Injection!</h2>
+					<pre><code data-trim data-noescape>
+class SaladService(
+  lettuceDao: LettuceDao,
+  tomatoDao: TomatoDao
+) {	
+ def prepareSalad(nbPeople: Int): Salad = {
+   // do something here with lettuceDao and tomatoDao
+ }
+}
+					</code></pre>
+					<aside class="notes">
+						<ul>
+							<li>In Scala, pass to constructor</li>
+							<li>In Java, constructor or state</li>
+							<li>Consequence: construction of dependency is done outside/elsewhere</li>
+						</ul>
+					</aside>
+				</section>
+				<section>
+					<h2>An example</h2>
+					<p>N-Tier application</p>
+					<ul>
+						<li>Presentation layer (Controllers)</li>
+						<li>Logic layer (Services)</li>
+						<li>Data layer (Data Access Objects)</li>
+					</ul>
+					<aside class="notes">
+						<ul>
+							<li>you may see I used Java for a long time</li>
+							<li>Data Access Objects = DAO</li>
+							<li>Consequence: construction of dependency is done outside/elsewhere</li>
+							<li>Where?</li>	
+							<li>It's called "wiring"</li>
+						</ul>
+					</aside>
+				</section>
 			</div>
 		</div>
 
